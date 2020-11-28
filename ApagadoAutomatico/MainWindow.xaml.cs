@@ -136,16 +136,16 @@ namespace ApagadoAutomatico
         {
             bInicia = !bInicia;
 
-            if (bInicia)
+            if (!bInicia)
             {
                 btn_Iniciar.Content = "Cancelar";
-                Process.Start("shutdown", "/a ");
+                Process.Start("shutdown", "-a ");
             }
             else
             {
                 int nSegundosTotales = calcularTiempo();
                 btn_Iniciar.Content = "Iniciar";
-                Process.Start("shutdown", "/s /t " + nSegundosTotales);
+                Process.Start("shutdown", "-s -t " + nSegundosTotales);
             }
 
             cambiarVisibilidad();
