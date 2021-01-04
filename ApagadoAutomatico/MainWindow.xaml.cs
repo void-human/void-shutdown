@@ -33,28 +33,28 @@ namespace ApagadoAutomatico
             lbl_Segundos.Content = sSegundos;
 
             tmContador = new Timer(1000);
-            tmContador.Elapsed += new ElapsedEventHandler(dispararTimer);
+            tmContador.Elapsed += new ElapsedEventHandler(SegundosContar);
             tmContador.Start();
         }
 
-        public void dispararTimer(object sender, ElapsedEventArgs e)
+        public void SegundosContar(object sender, ElapsedEventArgs e)
         {
             if (bInicia)
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    if (reducirValor(lbl_Segundos) == 59)
+                    if (Reducir(lbl_Segundos) == 59)
                     {
-                        if (reducirValor(lbl_Minutos) == 59)
+                        if (Reducir(lbl_Minutos) == 59)
                         {
-                            reducirValor(lbl_Horas);
+                            Reducir(lbl_Horas);
                         }
                     }
                 });
             }
         }
 
-        public void aumentarValor(Label label)
+        public void Aumentar(Label label)
         {
             int nActual = Int32.Parse(label.Content.ToString());
             
@@ -64,11 +64,11 @@ namespace ApagadoAutomatico
                 nActual = 0;
             }
 
-            string sNuevo = rellenar(nActual+"");
+            string sNuevo = Formato.RellenarIzquierda(nActual+"","0",2);
             label.Content = sNuevo;
         }
 
-        public int reducirValor(Label label)
+        public int Reducir(Label label)
         {
             int nActual = Int32.Parse(label.Content.ToString());
             nActual--;
@@ -77,25 +77,13 @@ namespace ApagadoAutomatico
                 nActual = 59;
             }
 
-            string sNuevo = rellenar(nActual + "");
+            string sNuevo = Formato.RellenarIzquierda(nActual + "", "0", 2);
             label.Content = sNuevo;
             
             return nActual;
         }
 
-        public string rellenar(string sValor)
-        {
-            if (sValor.Length != 2)
-            {
-                return rellenar("0"+sValor);
-            }
-            else
-            {
-                return sValor;
-            }
-        }
-
-        public int calcularTiempo()
+        public int TiempoSegundos()
         {
             nHoras = Int32.Parse(lbl_Horas.Content.ToString());
             nMinutos = Int32.Parse(lbl_Minutos.Content.ToString());
@@ -108,31 +96,25 @@ namespace ApagadoAutomatico
             return nSegundos;
         }
 
-        public void cambiarVisibilidad()
+        public void CambiarVisibilidad()
         {
+            Visibility visibility = Visibility.Visible;
             if (bInicia)
             {
-                btn_MasHoras.Visibility = Visibility.Hidden;
-                btn_MasMinutos.Visibility = Visibility.Hidden;
-                btn_MasSegundos.Visibility = Visibility.Hidden;
-
-                btn_MenosHoras.Visibility = Visibility.Hidden;
-                btn_MenosMinutos.Visibility = Visibility.Hidden;
-                btn_MenosSegundos.Visibility = Visibility.Hidden;
+                visibility = Visibility.Hidden;
             }
-            else
-            {
-                btn_MasHoras.Visibility = Visibility.Visible;
-                btn_MasMinutos.Visibility = Visibility.Visible;
-                btn_MasSegundos.Visibility = Visibility.Visible;
 
-                btn_MenosHoras.Visibility = Visibility.Visible;
-                btn_MenosMinutos.Visibility = Visibility.Visible;
-                btn_MenosSegundos.Visibility = Visibility.Visible;
-            }
+            btn_MasHoras.Visibility = visibility;
+            btn_MasMinutos.Visibility = visibility;
+            btn_MasSegundos.Visibility = visibility;
+
+            btn_MenosHoras.Visibility = visibility;
+            btn_MenosMinutos.Visibility = visibility;
+            btn_MenosSegundos.Visibility = visibility;
+
         }
 
-        public void activarApagado()
+        public void Activar()
         {
             bInicia = !bInicia;
 
@@ -143,12 +125,12 @@ namespace ApagadoAutomatico
             }
             else
             {
-                int nSegundosTotales = calcularTiempo();
+                int nSegundosTotales = TiempoSegundos();
                 btn_Iniciar.Content = "Iniciar";
                 Process.Start("shutdown", "-s -t " + nSegundosTotales);
             }
 
-            cambiarVisibilidad();
+            CambiarVisibilidad();
         }
 
         #region Eventos
@@ -167,37 +149,37 @@ namespace ApagadoAutomatico
 
         private void btn_MasHoras_Click(object sender, RoutedEventArgs e)
         {
-            aumentarValor(lbl_Horas);
+            Aumentar(lbl_Horas);
         }
 
         private void btn_MasMinutos_Click(object sender, RoutedEventArgs e)
         {
-            aumentarValor(lbl_Minutos);
+            Aumentar(lbl_Minutos);
         }
 
         private void btn_MasSegundos_Click(object sender, RoutedEventArgs e)
         {
-            aumentarValor(lbl_Segundos);
+            Aumentar(lbl_Segundos);
         }
 
         private void btn_MenosHoras_Click(object sender, RoutedEventArgs e)
         {
-            reducirValor(lbl_Horas);
+            Reducir(lbl_Horas);
         }
 
         private void btn_MenosMinutos_Click(object sender, RoutedEventArgs e)
         {
-            reducirValor(lbl_Minutos);
+            Reducir(lbl_Minutos);
         }
 
         private void btn_MenosSegundos_Click(object sender, RoutedEventArgs e)
         {
-            reducirValor(lbl_Segundos);
+            Reducir(lbl_Segundos);
         }
 
         private void btn_Iniciar_Click(object sender, RoutedEventArgs e)
         {
-            activarApagado();
+            Activar();
         }
 
         private void btn_Cerrar_Click(object sender, RoutedEventArgs e)
